@@ -1,10 +1,10 @@
 import os
 import json
-import time
 import threading
 import schedule
 import logging
 import tkinter as tk
+import time
 
 from utils.send_heartbeat import send_heartbeat
 
