@@ -137,7 +137,8 @@ def _send_and_record_heartbeat():
     if ok:
         last_success_time = ts
         last_error_msg    = ''
-        logger.info(f'心跳已发送，200 OK ({ts})')
+      #  logger.info(f'心跳已发送，200 OK ({ts})')
+    # utils.send_heartbeat 已经记录成功日志，这里不再重复输出
     else:
         last_failure_time = ts
         last_error_msg    = '心跳发送失败'
