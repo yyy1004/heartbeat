@@ -22,6 +22,14 @@ icon_red = create_icon('red')
 icon_gray = create_icon('gray')
 
 
+def update_tray_status():
+    """根据心跳状态更新托盘颜色和菜单"""
+    if not config.tray_icon:
+        return
+    config.tray_icon.icon = icon_green if config.heartbeat_enabled else icon_gray
+    config.tray_icon.update_menu()
+
+
 def check_password_dialog():
     pwd = simpledialog.askstring('验证', '请输入操作密码：', show='*', parent=config._root)
     if config.PSW and pwd == config.PSW:
@@ -58,6 +66,7 @@ def _toggle_heartbeat_dialog():
         return
     config.heartbeat_enabled = not config.heartbeat_enabled
     config.logger.info('心跳' + ('开启' if config.heartbeat_enabled else '暂停'))
+    update_tray_status()
 
 
 def toggle_heartbeat(icon, item):
@@ -130,7 +139,7 @@ def require_exit(icon, item):
 
 def setup_tray():
     config.tray_icon = Icon('Heartbeat')
-    config.tray_icon.icon = icon_green
+    config.tray_icon.icon = icon_green if config.heartbeat_enabled else icon_gray
     config.tray_icon.title = '心跳客户端'
     config.tray_icon.menu = Menu(
         MenuItem('当前状态', show_status),
@@ -140,4 +149,5 @@ def setup_tray():
         MenuItem('修改服务器', modify_server),
         MenuItem('退出', require_exit),
     )
+    update_tray_status()
     config.tray_icon.run()

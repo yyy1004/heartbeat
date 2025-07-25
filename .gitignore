@@ -6,6 +6,10 @@
 **/__pycache__/
 # 忽略所有 .pyc、.pyo、.pyd 等字节码文件
 *.py[cod]
+*.pyo
 
 
 heart_server.diff
+
+build/
+dist/

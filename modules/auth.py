@@ -1,6 +1,7 @@
 import schedule
 
 import config
+from modules.tray import update_tray_status
 from utils.activate import activate_once
 from utils.validate import validate_remote
 
@@ -13,6 +14,7 @@ def retry_authorize():
     ok = result.get('valid', result.get('success', False))
     if ok:
         config.heartbeat_enabled = True
+        update_tray_status()
         if 'clientId' in result:
             config.CLIENT_ID = result['clientId']
             config.logger.info(f'已设置 CLIENT_ID = {config.CLIENT_ID}')
@@ -36,6 +38,7 @@ def check_local_then_remote():
             result = validate_remote(config.VALIDATE_URL, config.CLIENT_ID)
             ok = result.get('valid', False)
         config.heartbeat_enabled = ok
+        update_tray_status()
         config.logger.info(f'授权{"通过" if ok else "失败，已暂停心跳"}')
         if 'clientId' in result:
             config.CLIENT_ID = result['clientId']
@@ -57,9 +60,11 @@ def schedule_daily_validate():
         ok = result.get('valid', False)
         if ok:
             config.heartbeat_enabled = True
+            update_tray_status()
             config.logger.info('每日授权验证通过')
         else:
             config.heartbeat_enabled = False
+            update_tray_status()
             config.logger.warning('每日授权验证失败，已暂停心跳')
             schedule.every(20).seconds.do(retry_authorize).tag('auth_retry')
 

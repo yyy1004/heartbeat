@@ -10,6 +10,10 @@ from utils.send_heartbeat import send_heartbeat
 
 def _send_and_record_heartbeat():
     """Send heartbeat and record timestamps"""
+    if not config.heartbeat_enabled:
+        config.logger.debug('心跳已暂停，跳过发送')
+        return
+
     ok = send_heartbeat(config.ACTIVATE_URL, config.CLIENT_ID, config.PSW)
     ts = time.strftime('%Y-%m-%d %H:%M:%S')
 
