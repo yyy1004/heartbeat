@@ -1,6 +1,7 @@
 import time
 import logging
 import requests
+from utils.get_cpu_serial import get_cpu_serial  # 或者直接复制 get_cpu_serial 的实现
 
 logger = logging.getLogger(__name__)
 
@@ -24,9 +25,10 @@ def send_heartbeat(
         return False
 
     try:
+        cpu = get_cpu_serial()
         resp = requests.post(
             activate_url,
-            data={'action': 'beat', 'ClientId': client_id, 'PSW': psw},
+            data={'action': 'beat', 'ClientId': client_id, 'PSW': psw, 'CPU': cpu},
             timeout=timeout
         )
         if resp.status_code == 200:

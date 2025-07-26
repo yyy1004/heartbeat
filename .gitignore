@@ -7,6 +7,8 @@
 # 忽略所有 .pyc、.pyo、.pyd 等字节码文件
 *.py[cod]
 *.pyo
+*.pyc
+__pycache__/
 
 
 heart_server.diff

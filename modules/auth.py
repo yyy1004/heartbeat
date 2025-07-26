@@ -25,6 +25,9 @@ def retry_authorize():
     elif config.auth_retry_count >= config.MAX_AUTH_RETRIES:
         config.logger.warning('重试次数已达上限，停止重试')
         schedule.clear('auth_retry')
+    else:
+        err = result.get('err', '')
+        config.logger.info(f'重试激活失败，{err}')
 
 
 def check_local_then_remote():
@@ -39,7 +42,8 @@ def check_local_then_remote():
             ok = result.get('valid', False)
         config.heartbeat_enabled = ok
         update_tray_status()
-        config.logger.info(f'授权{"通过" if ok else "失败，已暂停心跳"}')
+        err = result.get('err', '')
+        config.logger.info(f'授权{"通过" if ok else f"失败，已暂停心跳, {err}"}')
         if 'clientId' in result:
             config.CLIENT_ID = result['clientId']
             config.logger.info(f'已设置 CLIENT_ID = {config.CLIENT_ID}')
