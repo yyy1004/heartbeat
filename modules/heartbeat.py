@@ -2,7 +2,7 @@ import time
 import schedule
 
 import config
-
+from modules.auth import validate_and_update
 from utils.send_heartbeat import send_heartbeat
 
 
@@ -14,7 +14,7 @@ def _send_and_record_heartbeat():
         config.logger.debug('心跳已暂停，跳过发送')
         return
 
-    ok = send_heartbeat(config.ACTIVATE_URL, config.CLIENT_ID, config.PSW)
+    ok, msg = send_heartbeat(config.ACTIVATE_URL, config.CLIENT_ID, config.PSW)
     ts = time.strftime('%Y-%m-%d %H:%M:%S')
 
     if ok:
@@ -22,8 +22,9 @@ def _send_and_record_heartbeat():
         config.last_error_msg = ''
     else:
         config.last_failure_time = ts
-        config.last_error_msg = '心跳发送失败'
+        config.last_error_msg = msg or '心跳验证失败'
         config.logger.warning(f'心跳失败 ({ts})')
+        validate_and_update()
 
 
 def reschedule_heartbeat():
