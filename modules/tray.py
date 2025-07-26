@@ -31,6 +31,7 @@ def update_tray_status():
 
 
 def check_password_dialog():
+    """弹出密码验证对话框，返回用户输入是否正确"""
     pwd = simpledialog.askstring('验证', '请输入操作密码：', show='*', parent=config._root)
     if config.PSW and pwd == config.PSW:
         return True
@@ -40,6 +41,7 @@ def check_password_dialog():
 
 
 def _modify_server_dialog():
+    """让用户输入新的服务器地址并保存"""
     if config.PSW and not check_password_dialog():
         return
     prev_host = config.ACTIVATE_URL.rsplit('/ajax', 1)[0]
@@ -58,10 +60,12 @@ def _modify_server_dialog():
 
 
 def modify_server(icon, item):
+    """在主线程中弹出修改服务器地址的窗口"""
     config._root.after(0, _modify_server_dialog)
 
 
 def _toggle_heartbeat_dialog():
+    """切换心跳发送状态"""
     if config.PSW and not check_password_dialog():
         return
     config.heartbeat_enabled = not config.heartbeat_enabled
@@ -70,10 +74,12 @@ def _toggle_heartbeat_dialog():
 
 
 def toggle_heartbeat(icon, item):
+    """在主线程中切换心跳发送"""
     config._root.after(0, _toggle_heartbeat_dialog)
 
 
 def _toggle_logging_dialog():
+    """切换日志文件输出开关"""
     if config.PSW and not check_password_dialog():
         return
     config.file_logging_enabled = not config.file_logging_enabled
@@ -85,10 +91,12 @@ def _toggle_logging_dialog():
 
 
 def toggle_logging(icon, item):
+    """在主线程中切换日志输出"""
     config._root.after(0, _toggle_logging_dialog)
 
 
 def _set_interval_dialog():
+    """询问用户新的心跳间隔并生效"""
     if config.PSW and not check_password_dialog():
         return
     val = simpledialog.askinteger(
@@ -102,10 +110,12 @@ def _set_interval_dialog():
 
 
 def set_interval(icon, item):
+    """在主线程中修改心跳间隔"""
     config._root.after(0, _set_interval_dialog)
 
 
 def _show_status_dialog():
+    """弹出窗口显示当前心跳状态"""
     lines = [
         f"激活：{'正常' if config.heartbeat_enabled else '未激活'}",
         f"心跳：{'已开启' if config.heartbeat_enabled else '已暂停'}",
@@ -122,10 +132,12 @@ def _show_status_dialog():
 
 
 def show_status(icon, item):
+    """在主线程中显示状态窗口"""
     config._root.after(0, _show_status_dialog)
 
 
 def _require_exit_dialog():
+    """退出程序前的清理操作"""
     if config.PSW and not check_password_dialog():
         return
     config.logger.info('退出程序')
@@ -134,10 +146,12 @@ def _require_exit_dialog():
 
 
 def require_exit(icon, item):
+    """在主线程中执行退出"""
     config._root.after(0, _require_exit_dialog)
 
 
 def setup_tray():
+    """创建并运行系统托盘图标及其菜单"""
     config.tray_icon = Icon('Heartbeat')
     config.tray_icon.icon = icon_green if config.heartbeat_enabled else icon_gray
     config.tray_icon.title = '心跳客户端'
