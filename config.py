@@ -8,7 +8,8 @@ from utils.log_utils import setup_log_file
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 MAX_LOG_FILES = 3
-LOG_DIR = os.path.dirname(os.path.abspath(__file__))
+# 将日志文件放在程序运行的当前目录
+LOG_DIR = os.getcwd()
 LOG_FILE, file_handler = setup_log_file(
     LOG_DIR, 'heartbeat.log', MAX_LOG_FILES, logger
 )
