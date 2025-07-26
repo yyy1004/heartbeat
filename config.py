@@ -2,12 +2,16 @@ import os
 import json
 import tkinter as tk
 import logging
+from utils.log_utils import setup_log_file
 
 # ====== 日志配置 ======
-LOG_FILE = 'heartbeat.log'
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-file_handler = logging.FileHandler(LOG_FILE, encoding='utf-8')
+MAX_LOG_FILES = 3
+LOG_DIR = os.path.dirname(os.path.abspath(__file__))
+LOG_FILE, file_handler = setup_log_file(
+    LOG_DIR, 'heartbeat.log', MAX_LOG_FILES, logger
+)
 stream_handler = logging.StreamHandler()
 fmt = logging.Formatter('%(asctime)s [%(levelname)s] %(message)s')
 file_handler.setFormatter(fmt)

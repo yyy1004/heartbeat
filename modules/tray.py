@@ -69,6 +69,8 @@ def _toggle_heartbeat_dialog():
     if config.PSW and not check_password_dialog():
         return
     config.heartbeat_enabled = not config.heartbeat_enabled
+    if config.heartbeat_enabled:
+        config.auth_retry_count = 0
     config.logger.info('心跳' + ('开启' if config.heartbeat_enabled else '暂停'))
     update_tray_status()
 
@@ -88,6 +90,7 @@ def _toggle_logging_dialog():
     else:
         config.logger.removeHandler(config.file_handler)
     config.logger.info('日志输出' + ('启用' if config.file_logging_enabled else '禁用'))
+    update_tray_status()
 
 
 def toggle_logging(icon, item):
