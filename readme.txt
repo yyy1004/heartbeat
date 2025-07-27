@@ -90,6 +90,7 @@ file_logging_enabled	是否向文件写日志	True
 日志管理
 
 每日创建一个以日期命名的日志文件，文件名格式如 YYYYMMDDheartbeat.log。
+程序会在每日零点检测日期变化，若客户端持续运行将自动切换到新的日志文件。
 
 通过 utils.log_utils 在每天凌晨清理旧日志，仅保留最多 MAX_LOG_FILES 个。
 
